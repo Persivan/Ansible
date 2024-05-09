@@ -1,0 +1,3 @@
+inventory.txt
+hosts/*
+!hosts/example

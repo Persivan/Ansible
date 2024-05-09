@@ -1,0 +1,22 @@
+---
+# tasks file for fav-packages
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Update all packges to the latest version
+  apt:
+    upgrade: dist
+
+- name: Install favorite packages
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+
+- name: Change hostname
+  hostname:
+    name: "{{ new_hostname }}"
+
+#- name: Ping
+#  ansible.builtin.ping:

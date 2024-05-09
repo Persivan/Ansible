@@ -1,0 +1,11 @@
+---
+# vars file for fav-packages
+packages:
+  - htop
+  - nano
+  - curl
+  - dnsutils
+  - net-tools
+  - nmon
+
+new_hostname: eventurika-client

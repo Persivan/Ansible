@@ -1,0 +1,5 @@
+- name: Install favorite packages
+  hosts: all
+  gather_facts: yes
+  roles:
+    - { role: roles/fav-packges }
