@@ -2,4 +2,4 @@
   hosts: all
   gather_facts: yes
   roles:
-    - { role: roles/fav-packges }
+    - { role: roles/fav-packages }
