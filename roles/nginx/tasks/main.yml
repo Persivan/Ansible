@@ -1,0 +1,60 @@
+---
+# tasks file for nginx
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Update all packges to the latest version
+  apt:
+    upgrade: dist
+
+- name: Install favorite packages
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+
+- name: Install Nginx Web Server
+  apt:
+    name=nginx
+    state=latest
+  notify:
+    - nginx systemd
+
+- name: Create document root
+  file:
+    path: "/var/www/{{ domain }}/html"
+    state: directory
+    owner: "www-data"
+    group: "www-data"
+    mode: "0755"
+    recurse: yes
+
+- name: Deploy Nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Remove default Nginx site
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+
+- name: Test Nginx configuration
+  command: nginx -t
+  register: nginx_test
+  ignore_errors: yes
+
+- name: Fail if Nginx configuration is invalid
+  fail:
+    msg: "Nginx configuration is invalid"
+  when: nginx_test.rc != 0
+
+- name: Reload Nginx
+  service:
+    name: nginx
+    state: reloaded
+  when: nginx_test.rc == 0
