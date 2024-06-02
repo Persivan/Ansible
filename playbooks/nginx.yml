@@ -1,0 +1,7 @@
+---
+- name: Install nginx and configure ssl
+  hosts: all
+  gather_facts: yes
+  roles:
+    - { role: roles/nginx }
+
