@@ -38,10 +38,20 @@
     group: "root"
     mode: "0644"
 
-- name: Remove default Nginx site
-  file:
-    path: "/etc/nginx/sites-enabled/default"
-    state: absent
+#- name: Remove default Nginx site
+#  file:
+#    path: "/etc/nginx/sites-enabled/default"
+#    state: absent
+
+- name: Copy SSL certificate file
+  copy:
+    src: /files/ssl/cert.pem
+    dest: /etc/ssl/cert.pem
+
+- name: Copy SSL key file
+  copy:
+    src: /files/ssl/key.pem
+    dest: /etc/ssl/key.pem
 
 - name: Test Nginx configuration
   command: nginx -t
