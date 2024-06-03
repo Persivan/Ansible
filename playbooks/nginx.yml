@@ -1,7 +1,12 @@
 ---
-- name: Install nginx and configure ssl
-  hosts: all
+- name: Install nginx and configure worker
+  hosts: worker
   gather_facts: yes
   roles:
     - { role: roles/nginx }
 
+- name: Install nginx and configure balancer with ssl
+  hosts: balancer
+  gather_facts: yes
+  roles :
+    - { role: roles/nginx-balancer}

@@ -77,4 +77,4 @@
 
 - name: Reminder
   debug:
-    msg: "WORKER {{ domain }} - nginx created, don't forget to put builded app to /var/www/{{ domain }}/html/"
+    msg: "MASTER {{ domain }} - nginx created!"

@@ -5,7 +5,26 @@ server {
     root /var/www/{{ domain }}/html;
     index index.html index.htm index.nginx-debian.html;
 
-    server_name {{ ansible_ssh_host }};
+    server_name {{ ansible_ssh_host }} {{ domain }};
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    root /var/www/{{ domain }}/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name {{ domain }};
+
+    ssl_certificate /etc/ssl/cert.pem;
+    ssl_certificate_key /etc/ssl/key.pem;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
 
     location / {
         try_files $uri $uri/ =404;

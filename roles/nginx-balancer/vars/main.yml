@@ -1,0 +1,11 @@
+---
+# vars file for nginx
+packages:
+  - htop
+  - nano
+  - curl
+  - dnsutils
+  - net-tools
+  - nmon
+
+domain: "eventurika.net"
