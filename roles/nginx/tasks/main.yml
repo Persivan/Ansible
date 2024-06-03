@@ -38,10 +38,16 @@
     group: "root"
     mode: "0644"
 
-#- name: Remove default Nginx site
-#  file:
-#    path: "/etc/nginx/sites-enabled/default"
-#    state: absent
+- name: Create a symlink for the Nginx site
+  file:
+    src: "/etc/nginx/sites-available/{{ domain }}"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}"
+    state: link
+
+- name: Remove default Nginx site
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
 
 - name: Copy SSL certificate file
   copy:
@@ -50,8 +56,8 @@
 
 - name: Copy SSL key file
   copy:
-    src: /files/ssl/key.pem
-    dest: /etc/ssl/key.pem
+    src: /files/ssl/key.cer
+    dest: /etc/ssl/key.cer
 
 - name: Test Nginx configuration
   command: nginx -t
@@ -68,3 +74,7 @@
     name: nginx
     state: reloaded
   when: nginx_test.rc == 0
+
+- name: Reminder
+  debug:
+    msg: "{{ domain }} - nginx created, don't forget to put builded app to /var/www/{{ domain }}/html/"
