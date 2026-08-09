@@ -1,6 +1,5 @@
 ---
 - name: Ubuntu server maintenance
-  hosts: ubuntu_servers
   become: true
   gather_facts: true
 
