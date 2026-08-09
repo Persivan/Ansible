@@ -53,49 +53,6 @@
       ansible.builtin.debug:
         msg: "{{ failed_services.stdout_lines | default([]) }}"
 
-    - name: Get CPU statistics for the last 7 days
-      ansible.builtin.shell: |
-        for f in /var/log/sysstat/sa*; do
-          [ -f "$f" ] || continue
-          sar -u -f "$f" 2>/dev/null
-        done
-      register: cpu_history
-      changed_when: false
-
-    - name: Get memory statistics for the last 7 days
-      ansible.builtin.shell: |
-        for f in /var/log/sysstat/sa*; do
-          [ -f "$f" ] || continue
-          sar -r -f "$f" 2>/dev/null
-        done
-      register: memory_history
-      changed_when: false
-
-    - name: Get load statistics for the last 7 days
-      ansible.builtin.shell: |
-        for f in /var/log/sysstat/sa*; do
-          [ -f "$f" ] || continue
-          sar -q -f "$f" 2>/dev/null
-        done
-      register: load_history
-      changed_when: false
-
-    # ---------------------------------------------------------
-    # Display historical reports
-    # ---------------------------------------------------------
-
-    - name: CPU history - last 7 days
-      ansible.builtin.debug:
-        msg: "{{ cpu_history.stdout_lines }}"
-
-    - name: Memory history - last 7 days
-      ansible.builtin.debug:
-        msg: "{{ memory_history.stdout_lines }}"
-
-    - name: Load history - last 7 days
-      ansible.builtin.debug:
-        msg: "{{ load_history.stdout_lines }}"
-
     - name: Check if reboot is required
       ansible.builtin.stat:
         path: /var/run/reboot-required
