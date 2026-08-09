@@ -27,5 +27,25 @@
 #     owner: root
 #     mode: 0555
 
+    - name: Install sysstat
+      ansible.builtin.apt:
+        name: sysstat
+        state: present
+        update_cache: true
+
+    - name: Enable sysstat collection
+      ansible.builtin.lineinfile:
+        path: /etc/default/sysstat
+        regexp: '^ENABLED='
+        line: 'ENABLED="true"'
+
+    - name: Enable sysstat timer
+      ansible.builtin.systemd:
+        name: sysstat
+        enabled: true
+        state: started
+        daemon_reload: true
+
 #- name: Ping
 #  ansible.builtin.ping:
+
