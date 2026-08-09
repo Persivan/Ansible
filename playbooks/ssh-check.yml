@@ -1,0 +1,8 @@
+---
+- name: Check SSH connectivity
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Test SSH authentication
+      ansible.builtin.ping:
