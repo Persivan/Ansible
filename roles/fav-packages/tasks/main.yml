@@ -14,18 +14,18 @@
     pkg: "{{ packages }}"
     state: present
 
-- name: Change hostname
-  hostname:
-    name: "{{ new_hostname }}"
+# - name: Change hostname
+#   hostname:
+#     name: "{{ new_hostname }}"
 
-- name: Ensure docker config file exists (or create)
-  copy:
-    content: ""
-    dest: /etc/nologin
-    force: false
-    group: sys
-    owner: root
-    mode: 0555
+# - name: Ensure docker config file exists (or create)
+#   copy:
+#     content: ""
+#     dest: /etc/nologin
+#     force: false
+#     group: sys
+#     owner: root
+#     mode: 0555
 
 #- name: Ping
 #  ansible.builtin.ping:
