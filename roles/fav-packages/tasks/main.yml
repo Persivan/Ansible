@@ -1,51 +1,52 @@
 ---
+
 # tasks file for fav-packages
+
 - name: Upgrade all packages to the latest version
-  apt:
+  ansible.builtin.apt:
     name: "*"
     state: latest
 
-- name: Update all packges to the latest version
-  apt:
+- name: Upgrade all packages using dist upgrade
+  ansible.builtin.apt:
     upgrade: dist
 
 - name: Install favorite packages
-  apt:
-    pkg: "{{ packages }}"
+  ansible.builtin.apt:
+    name: "{{ packages }}"
     state: present
 
+- name: Install sysstat
+  ansible.builtin.apt:
+    name: sysstat
+    state: present
+    update_cache: true
+
+- name: Enable sysstat collection
+  ansible.builtin.lineinfile:
+    path: /etc/default/sysstat
+    regexp: '^ENABLED='
+    line: 'ENABLED="true"'
+
+- name: Enable and start sysstat
+  ansible.builtin.systemd:
+    name: sysstat
+    enabled: true
+    state: started
+    daemon_reload: true
+
 # - name: Change hostname
-#   hostname:
+#   ansible.builtin.hostname:
 #     name: "{{ new_hostname }}"
 
 # - name: Ensure docker config file exists (or create)
-#   copy:
+#   ansible.builtin.copy:
 #     content: ""
 #     dest: /etc/nologin
 #     force: false
 #     group: sys
 #     owner: root
-#     mode: 0555
+#     mode: "0555"
 
-    - name: Install sysstat
-      ansible.builtin.apt:
-        name: sysstat
-        state: present
-        update_cache: true
-
-    - name: Enable sysstat collection
-      ansible.builtin.lineinfile:
-        path: /etc/default/sysstat
-        regexp: '^ENABLED='
-        line: 'ENABLED="true"'
-
-    - name: Enable sysstat timer
-      ansible.builtin.systemd:
-        name: sysstat
-        enabled: true
-        state: started
-        daemon_reload: true
-
-#- name: Ping
-#  ansible.builtin.ping:
-
+# - name: Ping
+#   ansible.builtin.ping:
