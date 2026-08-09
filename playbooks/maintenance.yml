@@ -1,56 +1,55 @@
 ---
 - name: Ubuntu server maintenance
+  hosts: all
   become: true
   gather_facts: true
 
   tasks:
 
-    - name: Update apt package cache
+    - name: Update APT cache
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
 
-    - name: Upgrade all packages
+    - name: Upgrade installed packages
       ansible.builtin.apt:
         upgrade: dist
         autoremove: true
         autoclean: true
 
-    - name: Check filesystem usage
-      ansible.builtin.shell: |
-        df -hT
+    - name: Check disk usage
+      ansible.builtin.command: df -hT
       register: disk_usage
       changed_when: false
 
-    - name: Show filesystem usage
+    - name: Display disk usage
       ansible.builtin.debug:
         var: disk_usage.stdout_lines
 
-    - name: Check memory usage
-      ansible.builtin.shell: |
-        free -h
+    - name: Check memory
+      ansible.builtin.command: free -h
       register: memory_usage
       changed_when: false
 
-    - name: Show memory usage
+    - name: Display memory usage
       ansible.builtin.debug:
         var: memory_usage.stdout_lines
 
     - name: Check system uptime
       ansible.builtin.command: uptime
-      register: uptime
+      register: system_uptime
       changed_when: false
 
-    - name: Show uptime
+    - name: Display uptime
       ansible.builtin.debug:
-        var: uptime.stdout
+        var: system_uptime.stdout
 
     - name: Check failed systemd services
       ansible.builtin.command: systemctl --failed --no-legend
       register: failed_services
       changed_when: false
 
-    - name: Show failed services
+    - name: Display failed services
       ansible.builtin.debug:
         msg: "{{ failed_services.stdout_lines | default([]) }}"
 
@@ -61,17 +60,10 @@
 
     - name: Report reboot requirement
       ansible.builtin.debug:
-        msg: "⚠️ Reboot is required"
+        msg: "REBOOT REQUIRED"
       when: reboot_required.stat.exists
 
-    - name: Check important services
-      ansible.builtin.service_facts:
-
-    - name: Show failed services from service facts
+    - name: Report system is OK
       ansible.builtin.debug:
-        msg: >-
-          {{ ansible_facts.services
-             | dict2items
-             | selectattr('value.state', 'equalto', 'failed')
-             | map(attribute='key')
-             | list }}
+        msg: "No reboot required"
+      when: not reboot_required.stat.exists
